@@ -20,8 +20,8 @@ import java.util.logging.Logger;
  */
 public class Apps {
 
-    static int MAX_CODE_DIGIT = 10;
-    static String CODE = "7986972645";
+    static String CODE = "798697264532";
+    static int MAX_CODE_DIGIT = CODE.length();
     static int MAX_NUMBER = 10; // from 0 to 9
     private static int tryTime;
 
