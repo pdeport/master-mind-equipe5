@@ -4,36 +4,40 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("com.robohorse.robopojogenerator")
-public class TestResponse{
+public class TestResponse {
 
-	@SerializedName("good")
-	private int good;
+    @SerializedName("good")
+    private int good;
 
-	@SerializedName("wrong_place")
-	private int wrongPlace;
+    @SerializedName("wrong_place")
+    private int wrongPlace;
 
-	public void setGood(int good){
-		this.good = good;
-	}
+    public TestResponse(int good, int wrongPlace) {
+        this.good = good;
+        this.wrongPlace = wrongPlace;
+    }
 
-	public int getGood(){
-		return good;
-	}
+    public void setGood(int good) {
+        this.good = good;
+    }
 
-	public void setWrongPlace(int wrongPlace){
-		this.wrongPlace = wrongPlace;
-	}
+    public int getGood() {
+        return good;
+    }
 
-	public int getWrongPlace(){
-		return wrongPlace;
-	}
+    public void setWrongPlace(int wrongPlace) {
+        this.wrongPlace = wrongPlace;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"TestResponse{" +
-			"good = '" + good + '\'' +
-			",wrong_place = '" + wrongPlace + '\'' +
-			"}";
-		}
+    public int getWrongPlace() {
+        return wrongPlace;
+    }
+
+    @Override
+    public String toString() {
+        return "TestResponse{"
+                + "good = '" + good + '\''
+                + ",wrong_place = '" + wrongPlace + '\''
+                + "}";
+    }
 }

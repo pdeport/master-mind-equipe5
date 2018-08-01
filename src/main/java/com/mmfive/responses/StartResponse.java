@@ -39,13 +39,19 @@ public class StartResponse {
 	public StartResponse() {
 	}
 
+	public StartResponse(int size, String name, int quizzId) {
+		this.size = size;
+		this.name = name;
+		this.quizzId = quizzId;
+	}
+
 	@Override
  	public String toString(){
 		return 
 			"StartResponse{" +
 			"size = '" + size + '\'' + 
 			",name = '" + name + '\'' + 
-			",quizz_id = '" + quizzId + '\'' + 
+			",quizz_id = '" + quizzId + '\'' +
 			"}";
 		}
 }
