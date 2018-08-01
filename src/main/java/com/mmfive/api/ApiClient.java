@@ -9,6 +9,7 @@ package com.mmfive.api;
 import com.google.gson.reflect.TypeToken;
 import com.mmfive.exceptions.ApiCallFailedException;
 import com.mmfive.exceptions.requests.TestRequest;
+import com.mmfive.responses.ErrorResponse;
 import com.mmfive.responses.StartResponse;
 import com.mmfive.responses.TestResponse;
 
@@ -29,16 +30,16 @@ public class ApiClient {
         apiFactory = new ApiFactory(baseUrl, tokenKey, tokenValue, connectionTimeout, readTimeout);
     }
 
-    public TestResponse getTestResponse(TestRequest result) throws ApiCallFailedException {
+    public TestResponse getTestResponse(String result) throws ApiCallFailedException {
         Type testType = new TypeToken<TestResponse>() {
         }.getType();
         return apiFactory.getEndpointResponse(TEST_END_POINT, testType,result);
     }
 
     public StartResponse getStartResponse() throws ApiCallFailedException {
-        Type testType = new TypeToken<TestResponse>() {
+        Type startType = new TypeToken<StartResponse>() {
         }.getType();
-        return apiFactory.getEndpointResponse(START_END_POINT, testType,null);
+        return apiFactory.getEndpointResponse(START_END_POINT, startType,"");
     }
 
 }

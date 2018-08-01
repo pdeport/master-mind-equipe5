@@ -8,9 +8,12 @@ package com.mmfive.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mmfive.api.tools.ArrayAdapterFactory;
 import com.mmfive.exceptions.ApiCallFailedException;
 import com.mmfive.exceptions.requests.TestRequest;
+import com.mmfive.responses.ErrorResponse;
+import com.mmfive.responses.StartResponse;
 import com.mmfive.responses.TestResponse;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -65,28 +68,36 @@ public class ApiFactory {
         return c;
     }
 
-    public <T> T getEndpointResponse(String path, Type type,TestRequest testRequest) throws ApiCallFailedException {
+    public <T> T getEndpointResponse(String path, Type type,String result) throws ApiCallFailedException {
         ClientResponse res = null;
         MultivaluedMap formData = new MultivaluedMapImpl();
         try {
-            if (testRequest.equals(null)) {
+            if (path.equals("start")) {
                 formData.add("token", "tokenmm5");
                 res = client.resource(baseUrl).path(path)
-                        .header(tokenKey, tokenValue)
                         .accept(MediaType.APPLICATION_JSON)
-                        .post(ClientResponse.class);
+                        .post(ClientResponse.class, formData);
             }else {
                 formData.add("token", "tokenmm5");
-                formData.add("result", testRequest.getResult());
+                formData.add("result", result);
                 res = client.resource(baseUrl).path(path)
                         .accept(MediaType.APPLICATION_JSON)
                         .post(ClientResponse.class, formData);
             }
 
             if (res.getStatus() == 200) {
+                if(path.equals("start")){
+                    Reader reader = new InputStreamReader(res.getEntityInputStream());
+                    Type errorType = new TypeToken<ErrorResponse>() {
+                    }.getType();
+                    T data = gson.fromJson(reader, errorType);
+                    ErrorResponse errorResponse = (ErrorResponse) data;
+                    if(errorResponse.getError().equals("Quizz already started")){
+                        throw new ApiCallFailedException("Quizz already started");
+                    }
+                }
                 Reader reader = new InputStreamReader(res.getEntityInputStream());
                 T data = gson.fromJson(reader, type);
-                Logger.getLogger("Api Good");
                 return data;
             } else {
                 Logger.getLogger("");
