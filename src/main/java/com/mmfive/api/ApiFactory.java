@@ -65,11 +65,11 @@ public class ApiFactory {
         return c;
     }
 
-    public <T> T getEndpointResponse(String path, Type type,TestRequest testRequest) throws ApiCallFailedException {
+    public <T> T getEndpointResponse(String path, Type type,String result) throws ApiCallFailedException {
         ClientResponse res = null;
         MultivaluedMap formData = new MultivaluedMapImpl();
         try {
-            if (testRequest.equals(null)) {
+            if (result.equals(null)) {
                 formData.add("token", "tokenmm5");
                 res = client.resource(baseUrl).path(path)
                         .header(tokenKey, tokenValue)
@@ -77,7 +77,7 @@ public class ApiFactory {
                         .post(ClientResponse.class);
             }else {
                 formData.add("token", "tokenmm5");
-                formData.add("result", testRequest.getResult());
+                formData.add("result", result);
                 res = client.resource(baseUrl).path(path)
                         .accept(MediaType.APPLICATION_JSON)
                         .post(ClientResponse.class, formData);
