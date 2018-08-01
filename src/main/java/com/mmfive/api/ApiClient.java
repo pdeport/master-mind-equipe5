@@ -29,7 +29,7 @@ public class ApiClient {
         apiFactory = new ApiFactory(baseUrl, tokenKey, tokenValue, connectionTimeout, readTimeout);
     }
 
-    public TestResponse getTestResponse(TestRequest result) throws ApiCallFailedException {
+    public TestResponse getTestResponse(String result) throws ApiCallFailedException {
         Type testType = new TypeToken<TestResponse>() {
         }.getType();
         return apiFactory.getEndpointResponse(TEST_END_POINT, testType,result);
