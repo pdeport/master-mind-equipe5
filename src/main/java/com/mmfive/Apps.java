@@ -7,6 +7,7 @@ package com.mmfive;/*
 
 
 import com.mmfive.api.ApiClient;
+import com.mmfive.exceptions.requests.TestRequest;
 import com.mmfive.responses.StartResponse;
 import com.mmfive.responses.TestResponse;
 
@@ -100,19 +101,21 @@ public class Apps {
         for (int i = 0; i < 10; i++) {
             System.out.println("Il y a " + resfindNumbersInCode[i] + " chiffre(s) " + i + " dans le code");
         }
+
+        try {
+            System.out.println("Testing schedule retrieval: OK");
+
+            ApiClient apiClient = new ApiClient("http://172.16.37.129/api/","token","tokenmm5",30000,3000);
+            TestRequest testRequest = new TestRequest("12145","tokenmm5");
+            TestResponse testResponse = apiClient.getTestResponse(testRequest);
+
+            System.out.println(testResponse.toString());
+            StartResponse startResponse = apiClient.getStartResponse();
+            System.out.println(startResponse.toString());
+        } catch (Exception ex) {
+            Logger.getLogger(Apps.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
-    
-//    public static void main(String[] args) {
-//        try {
-//            System.out.println("Testing schedule retrieval: OK");
-//
-//            ApiClient apiClient = new ApiClient("http://172.16.37.129/api/","token","tokenmm5",30000,3000);
-//            TestResponse testResponse = apiClient.getTestResponse("12145");
-//            StartResponse startResponse = apiClient.getStartResponse();
-//            System.out.println(testResponse.toString());
-//            System.out.println(startResponse.toString());
-//        } catch (Exception ex) {
-//            Logger.getLogger(Apps.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
+
 }

@@ -10,12 +10,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mmfive.api.tools.ArrayAdapterFactory;
 import com.mmfive.exceptions.ApiCallFailedException;
+import com.mmfive.exceptions.requests.TestRequest;
+import com.mmfive.responses.TestResponse;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.client.urlconnection.HttpURLConnectionFactory;
 import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+import org.codehaus.jackson.map.ObjectMapper;
+import sun.text.resources.FormatData;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -31,16 +38,18 @@ public class ApiFactory {
 
     private final static String RESULT_STRING = "result";
     private final String baseUrl;
+    private final ObjectMapper mapper;
     private final Client client;
     private final String tokenKey;
     private final String tokenValue;
-    private final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+    private final Gson gson = new GsonBuilder().create();
 
     public ApiFactory(final String baseUrl, final String tokenKey, final String tokenValue, final int connectionTimeout, final int readTimeout) {
         this.baseUrl = baseUrl;
         client = getClient(connectionTimeout, readTimeout);
         this.tokenKey = tokenKey;
         this.tokenValue = tokenValue;
+        this.mapper = new ObjectMapper();
     }
 
     private Client getClient(final int connectionTimeout, final int readTimeout) {
@@ -56,20 +65,22 @@ public class ApiFactory {
         return c;
     }
 
-    public <T> T getEndpointResponse(String path, Type type,String result) throws ApiCallFailedException {
+    public <T> T getEndpointResponse(String path, Type type,TestRequest testRequest) throws ApiCallFailedException {
         ClientResponse res = null;
+        MultivaluedMap formData = new MultivaluedMapImpl();
         try {
-            if(result==null){
+            if (testRequest.equals(null)) {
+                formData.add("token", "tokenmm5");
                 res = client.resource(baseUrl).path(path)
                         .header(tokenKey, tokenValue)
                         .accept(MediaType.APPLICATION_JSON)
                         .post(ClientResponse.class);
             }else {
+                formData.add("token", "tokenmm5");
+                formData.add("result", testRequest.getResult());
                 res = client.resource(baseUrl).path(path)
-                        .header(tokenKey, tokenValue)
-                        .header(RESULT_STRING, result)
                         .accept(MediaType.APPLICATION_JSON)
-                        .post(ClientResponse.class);
+                        .post(ClientResponse.class, formData);
             }
 
             if (res.getStatus() == 200) {
