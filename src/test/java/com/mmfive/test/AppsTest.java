@@ -15,24 +15,24 @@ public class AppsTest {
     static String CODE = "123456789";
     static int MAX_CODE_DIGIT = CODE.length();
     static int MAX_NUMBER = 10; // from 0 to 9
-/*
-    @Test
-    public void testFindNumberInCode(){
-        int[] expected = new int[]{0,0,2,1,1,1,2,2,1,2};
-        int[] result = Mmcinq.findNumbersInCode(MAX_NUMBER);
-        assertArrayEquals(expected,result);
-    }
+
+//    @Test
+//    public void testFindNumberInCode(){
+//        int[] expected = new int[]{0,0,2,1,1,1,2,2,1,2};
+//        int[] result = Mmcinq.findNumbersInCode(MAX_NUMBER);
+//        assertArrayEquals(expected,result);
+//    }
 
     @Test
-    public void replaceCharAt(){
-        String result = Mmcinq.replaceCharAt("12345",1,(char) 3);
+    public void replaceCharAtTest(){
+        String result = Apps.replaceCharAt("12345",1,(char) 3);
         assertEquals("13345" ,result);
     }
-*/
-    @Test
-    public void searchNumberAtIndex() throws ApiCallFailedException, MalformedURLException {
-        assertEquals(2, 2);
-    }
+
+//    @Test
+//    public void searchNumberAtIndex() throws ApiCallFailedException, MalformedURLException {
+//        assertEquals(2, 2);
+//    }
 /*
     @Test
     public void generateCodeFromTable(int[] resfindNumbersInCode){
