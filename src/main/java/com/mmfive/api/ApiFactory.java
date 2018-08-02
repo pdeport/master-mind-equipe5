@@ -86,16 +86,6 @@ public class ApiFactory {
             }
 
             if (res.getStatus() == 200) {
-                if(path.equals("start")){
-                    Reader reader = new InputStreamReader(res.getEntityInputStream());
-                    Type errorType = new TypeToken<ErrorResponse>() {
-                    }.getType();
-                    T data = gson.fromJson(reader, errorType);
-                    ErrorResponse errorResponse = (ErrorResponse) data;
-                    if(errorResponse.getError().equals("Quizz already started")){
-                        throw new ApiCallFailedException("Quizz already started");
-                    }
-                }
                 Reader reader = new InputStreamReader(res.getEntityInputStream());
                 T data = gson.fromJson(reader, type);
                 return data;
