@@ -33,12 +33,12 @@ public class AppsTest extends TestCase {
 
     @Test
     public void searchNumberAtIndex() throws ApiCallFailedException, MalformedURLException {
-//        TestResponse tr = new TestResponse(0,0 );
-//        int[] t = new int[]{1,2,6,8,0};
-//        int n = Mmcinq.searchNumberAtIndex(1,"12345", t , tr,
-//                new ApiClient("http://172.16.37.129/api/", "token", "tokenmm5", 30000, 3000));
+        TestResponse tr = new TestResponse(0,0 );
+        int[] t = new int[]{1,2,6,8,0};
+        int n = Mmcinq.searchNumberAtIndex(1,"12345", t , tr,
+        new ApiClient("http://172.16.37.129/api/", "token", "tokenmm5", 30000, 3000));
         Assertions.assertEquals(2,2);
-    }*/
+    }
 
     @Test
     public void generateCodeFromTable() throws MalformedURLException, ApiCallFailedException {
@@ -58,6 +58,6 @@ public class AppsTest extends TestCase {
         ApiClient apiClient = new ApiClient("http://172.16.37.129/api/", "token", "tokenmm5", 30000, 3000);
         sr = apiClient.getStartResponse();
         sr =  new ApiClient("http://172.16.37.129/api/", "token", "tokenmm5", 30000, 3000).getStartResponse();
-    }
+    }*/
 
 }
