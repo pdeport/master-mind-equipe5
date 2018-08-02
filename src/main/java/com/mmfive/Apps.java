@@ -11,6 +11,8 @@ import com.mmfive.exceptions.ApiCallFailedException;
 import com.mmfive.exceptions.requests.TestRequest;
 import com.mmfive.responses.StartResponse;
 import com.mmfive.responses.TestResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,17 +22,33 @@ import java.util.logging.Logger;
  * @author MM5_DevTeam
  */
 public class Apps {
-    static int MAX_NUMBER = 10; // from 0 to 9
+
+    public static List<Character> generatePossibleValueList() {
+        List<Character> possibleChar = new ArrayList<>();
+        for (int i = 48; i < 48 + 10; i++) {
+            possibleChar.add((char) i);
+        }
+        for (int i = 65; i < 65 + 26; i++) {
+            possibleChar.add((char) i);
+        }
+        for (int i = 97; i < 97 + 26; i++) {
+            possibleChar.add((char) i);
+        }
+        return possibleChar;
+    }
+    
+    public static List<Character> POSSIBLE_CHAR_LIST = generatePossibleValueList();
+    static int MAX_NUMBER = POSSIBLE_CHAR_LIST.size();
     private static int tryTime;
 
-    final static int[] findNumbersInCode(ApiClient apiClient,StartResponse startResponse) throws ApiCallFailedException {
+    final static int[] findNumbersInCode(ApiClient apiClient, StartResponse startResponse) throws ApiCallFailedException {
         int res[] = new int[MAX_NUMBER];
         int found = 0;
 
         for (int i = 0; i < MAX_NUMBER && found < startResponse.getSize(); i++) {
             String codeTest = new String();
             for (int j = 0; j < startResponse.getSize(); j++) {
-                codeTest += i;
+                codeTest += POSSIBLE_CHAR_LIST.get(i);
             }
             TestResponse testReturn = tryCode(codeTest, apiClient);
 
@@ -41,22 +59,21 @@ public class Apps {
         return res;
     }
 
-    public static String replaceCharAt(String s, int pos, int c) {
+    public static String replaceCharAt(String s, int pos, char c) {
         return s.substring(0, pos) + c + s.substring(pos + 1);
     }
 
-    public static int searchNumberAtIndex(int index, String testCode, int[] resfindNumbersInCode, TestResponse test, ApiClient apiClient) throws ApiCallFailedException {
-        System.out.println(testCode);
+    public static char searchCharAtIndex(int index, String testCode, int[] resfindNumbersInCode, TestResponse test, ApiClient apiClient) throws ApiCallFailedException {
         for (int i = 0; i < MAX_NUMBER; i++) {
-            if (i != Integer.parseInt(testCode.charAt(index) + "")
+            if (POSSIBLE_CHAR_LIST.get(i) != testCode.charAt(index)
                     && resfindNumbersInCode[i] > 0) {
-                String testCode2 = replaceCharAt(testCode, index, (char) i);
+                String testCode2 = replaceCharAt(testCode, index, POSSIBLE_CHAR_LIST.get(i));
                 TestResponse test2 = tryCode(testCode2, apiClient);
 
                 if (test2.getGood() > test.getGood()) {
-                    return i;
+                    return POSSIBLE_CHAR_LIST.get(i);
                 } else if (test2.getGood() < test.getGood()) {
-                    return Integer.parseInt(testCode.charAt(index) + "");
+                    return testCode.charAt(index);
                 }
             }
         }
@@ -68,21 +85,21 @@ public class Apps {
         String testCode = "";
         for (int i = 0; i < MAX_NUMBER; i++) {
             for (int j = 0; j < resfindNumbersInCode[i]; j++) {
-                testCode += i;
+                testCode += POSSIBLE_CHAR_LIST.get(i);
             }
         }
         return testCode;
     }
 
-    final static String sortNumbersInCode(int[] resfindNumbersInCode, ApiClient apiClient,StartResponse startResponse) throws ApiCallFailedException {
+    final static String sortNumbersInCode(int[] resfindNumbersInCode, ApiClient apiClient, StartResponse startResponse) throws ApiCallFailedException {
         String finalCode = "";
         for (int i = 0; i < startResponse.getSize(); i++) {
             String testCode = finalCode + generateCodeFromTable(resfindNumbersInCode);
             TestResponse test = tryCode(testCode, apiClient);
             if (test.getGood() < startResponse.getSize()) {
-                int foundNumber = searchNumberAtIndex(i, testCode, resfindNumbersInCode, test, apiClient);
-                finalCode += foundNumber;
-                resfindNumbersInCode[foundNumber]--;
+                char foundChar = searchCharAtIndex(i, testCode, resfindNumbersInCode, test, apiClient);
+                finalCode += foundChar;
+                resfindNumbersInCode[POSSIBLE_CHAR_LIST.indexOf(foundChar)]--;
             } else {
                 i = startResponse.getSize();
                 finalCode = testCode;
@@ -93,27 +110,23 @@ public class Apps {
 
     final static TestResponse tryCode(String code, ApiClient apiClient) throws ApiCallFailedException {
         tryTime++;
-        if (code == "53375480") {
-            return new TestResponse(code.length(), 0);
-        }
         return apiClient.getTestResponse(code);
     }
 
     public static void main(String[] args) {
         try {
-            System.out.println("Testing schedule retrieval: OK");
             StartResponse startResponse = null;
             ApiClient apiClient = new ApiClient("http://172.16.37.129/api/", "token", "tokenmm5", 30000, 3000);
             try {
                 startResponse = apiClient.getStartResponse();
                 System.out.println(startResponse.toString());
-            } catch (ApiCallFailedException ex) {
+            } catch (Exception ex) {
                 System.out.println("Already started");
-                startResponse = new StartResponse(8,"mm5",123456);
+                startResponse = new StartResponse(28, "mm5", 123456);
                 System.out.println(startResponse.toString());
             }
-            int[] resfindNumbersInCode = findNumbersInCode(apiClient,startResponse);
-            String foundCode = sortNumbersInCode(resfindNumbersInCode, apiClient,startResponse);
+            int[] resfindNumbersInCode = findNumbersInCode(apiClient, startResponse);
+            String foundCode = sortNumbersInCode(resfindNumbersInCode, apiClient, startResponse);
             System.out.println("Found Code : " + foundCode);
             System.out.println("Number of try : " + tryTime);
         } catch (Exception ex) {
