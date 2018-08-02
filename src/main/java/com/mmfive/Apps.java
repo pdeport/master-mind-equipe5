@@ -23,13 +23,13 @@ public class Apps {
         try {
             System.out.println("Testing schedule retrieval: OK");
             StartResponse startResponse = null;
-            ApiClient apiClient = new ApiClient("http://172.16.37.129/api/", "token", "tokenmm5", 30000, 3000);
+            ApiClient apiClient = new ApiClient("http://172.16.37.129/api/", "token", "tokenmm5", 30000, 30000);
             try {
                 startResponse = apiClient.getStartResponse();
                 System.out.println(startResponse.toString());
             } catch (ApiCallFailedException ex) {
                 System.out.println("Already started");
-                startResponse = new StartResponse(8,"mm5",123456);
+                startResponse = new StartResponse(29,"mm5",123456);
                 System.out.println(startResponse.toString());
             }
             int[] resfindNumbersInCode = Mmcinq.findNumbersInCode(apiClient,startResponse);

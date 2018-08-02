@@ -5,15 +5,29 @@ import com.mmfive.exceptions.ApiCallFailedException;
 import com.mmfive.responses.StartResponse;
 import com.mmfive.responses.TestResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Mmcinq {
 
     public static int getTryTime() {
         return tryTime;
     }
-
-    static int MAX_NUMBER = 10; // from 0 to 9
     private static int tryTime;
 
+    public static List<Character> generateAlphanumList(){
+        List<Character> c = new ArrayList<>();
+        for (int i = 48; i < 48 + 10; i++){
+            c.add((char)i);
+        }
+        for (int i = 65; i < 65 + 26 + 26; i++){
+            c.add((char) i );
+        }
+        return c;
+    }
+
+    public static List<Character>  CHAR_LIST = generateAlphanumList();
+    public static int  MAX_NUMBER = CHAR_LIST.size();
 
 
     public static int[] findNumbersInCode(ApiClient apiClient, StartResponse startResponse) throws ApiCallFailedException {
@@ -23,7 +37,7 @@ public class Mmcinq {
         for (int i = 0; i < MAX_NUMBER && found < startResponse.getSize(); i++) {
             String codeTest = new String();
             for (int j = 0; j < startResponse.getSize(); j++) {
-                codeTest += i;
+                codeTest += CHAR_LIST.get(i);
             }
             TestResponse testReturn = tryCode(codeTest, apiClient);
 
@@ -60,7 +74,7 @@ public class Mmcinq {
         String testCode = "";
         for (int i = 0; i < MAX_NUMBER; i++) {
             for (int j = 0; j < resfindNumbersInCode[i]; j++) {
-                testCode += i;
+                testCode += CHAR_LIST.get(i);
             }
         }
         return testCode;
@@ -85,9 +99,9 @@ public class Mmcinq {
 
     public final static TestResponse tryCode(String code, ApiClient apiClient) throws ApiCallFailedException {
         tryTime++;
-        if (code == "53375480") {
+       /* if (code == "53375480") {
             return new TestResponse(code.length(), 0);
-        }
+        }*/
         return apiClient.getTestResponse(code);
     }
 
