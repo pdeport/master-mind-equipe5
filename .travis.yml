@@ -5,6 +5,5 @@ script:
 - mvn cobertura:cobertura
 - mvn clean install
 
-after_success:
-- bash <(curl -s https://codecov.io/bash) -t 1dcfc489-e412-4958-a7db-a16665bca4be
+after_success: bash <(curl -s https://codecov.io/bash) -t 1dcfc489-e412-4958-a7db-a16665bca4be
 
